@@ -1,7 +1,9 @@
 package com.springboot.main.repository;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +56,10 @@ public class ProductRepository {
             @RequestParam(required = false) String category
         ) {            
             return repo.findAll().stream()
-            .filter(p -> minPrice == null || p.getPrice() >= minPrice);
+            .filter(p -> minPrice == null || p.getPrice() >= minPrice)
+            .filter(p -> maxPrice == null || p.getPrice() <= maxPrice)
+            .filter(p -> category == null || p.getCategory().equalsIgnoreCase(category))
+            .collect(Collectors.toList());
         }
     }
 }
